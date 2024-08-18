@@ -30,7 +30,7 @@ router = APIRouter(prefix="/users", tags=["chillzone_users"])
 def get_users(db: Session = Depends(get_db)):
     res = crud.get_all_users(db=db)
     users = [User.model_validate(user) for user in res]
-    return UserListResponseSchema(users=users, message="Users list")
+    return UserListResponseSchema(users=users, length=len(users), message="Users list")
 
 
 @router.get(

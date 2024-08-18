@@ -30,6 +30,7 @@ class UserResponseSchema(BaseResponseSchema):
 
 
 class UserListResponseSchema(BaseResponseSchema):
+    length: int
     users: list[User]
 
 
