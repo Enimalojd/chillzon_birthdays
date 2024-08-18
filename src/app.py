@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 
+from src.users.repository.database import engine
+from src.users.repository import models
+from src.users.users import router as user_router
 
-def create_app() -> FastAPI:
-    app = FastAPI(
-        title="Chillzone API",
-        version="0.0.1",
-        description="API for Chillzone guild",
-        docs_url="/docs",
-        debug=True,
-    )
 
-    return app
+models.Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="Chillzone birthdays API")
+
+
+app.include_router(user_router)
