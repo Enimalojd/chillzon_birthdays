@@ -1,48 +1,47 @@
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar, List
+from typing import Generic, List, TypeVar
 
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.orm.exc import UnmappedInstanceError
 
-from src.users.repository.exceptions import (
+from src.users.exceptions import (
     DatabaseError,
     NicknameAlreadyExistsError,
     UserNotFoundError,
 )
+from src.users.repository.models import UserOrm
 from src.users.schemas import User as UserSchema, BaseUser
-from .models import UserOrm
-
 
 T = TypeVar("T")
 
 
-class AbstractRepository(ABC, Generic[T]):
+class BaseRepository(ABC, Generic[T]):
     def __init__(self, db: Session):
         self.db = db
 
     @abstractmethod
     def get_all(self) -> List[T]:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_by_id(self, id: int) -> T:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def create(self, entity: T) -> T:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def update(self, entity: T) -> T:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def delete(self, id: int) -> None:
-        pass
+        raise NotImplementedError
 
 
-class UserRepository(AbstractRepository[UserOrm]):
+class UserRepository(BaseRepository[UserOrm]):
     def __init__(self, db: Session):
         super().__init__(db)
 
@@ -56,7 +55,7 @@ class UserRepository(AbstractRepository[UserOrm]):
         try:
             user = self.db.query(UserOrm).filter(UserOrm.id == id).first()
             if not user:
-                raise UserNotFoundError(f"User with id {id} not found")
+                raise UserNotFoundError(param=id)
             return user
         except SQLAlchemyError as error:
             raise DatabaseError(error)
@@ -69,9 +68,7 @@ class UserRepository(AbstractRepository[UserOrm]):
                 .first()
             )
             if not user:
-                raise UserNotFoundError(
-                    f"User with discord nickname {discord_nickname} not found"
-                )
+                raise UserNotFoundError(param=discord_nickname)
             return user
         except SQLAlchemyError as error:
             raise DatabaseError(error)

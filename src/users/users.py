@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from datetime import date
 
 from src.users.repository.database import get_db
-from src.users.repository.exceptions import (
+from src.users.exceptions import (
     NicknameAlreadyExistsError,
     UserNotFoundError,
 )

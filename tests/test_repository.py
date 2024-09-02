@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.users.repository.repository import UserRepository
 from src.users.schemas import BaseUser
-from src.users.repository.exceptions import (
+from src.users.exceptions import (
     UserNotFoundError,
     NicknameAlreadyExistsError,
 )

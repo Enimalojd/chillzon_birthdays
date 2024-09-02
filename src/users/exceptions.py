@@ -9,5 +9,5 @@ class NicknameAlreadyExistsError(DatabaseError):
 
 
 class UserNotFoundError(DatabaseError):
-    def __init__(self, id) -> None:
-        super().__init__(f"User {id} not found")
+    def __init__(self, param) -> None:
+        super().__init__(f"User {param} not found")
